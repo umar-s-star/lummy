@@ -3,11 +3,11 @@ import { motion, useInView, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import {
-  ArrowRight, Trophy, Leaf, Sparkles, Bike, ChevronDown, Ticket, Copy, Check as CheckIcon,
+  ArrowRight, ChevronDown, Ticket, Copy, Check as CheckIcon,
 } from 'lucide-react';
 import { useDataStore } from '../../store';
 import { useLangStore } from '../../store';
-import { getCatName } from '../../utils';
+import { getCatName, getCategoryIcon } from '../../utils';
 import DishCard from '../menu/DishCard';
 import DragCarousel from '../common/DragCarousel';
 import type { Category, Language } from '../../types';
@@ -338,6 +338,7 @@ export function NewItemsSection() {
    CATEGORIES — Infinite DragCarousel
 ════════════════════════════════════════════════════════ */
 function CatItem({ cat, language }: { cat: Category; language: Language }) {
+  const Icon = getCategoryIcon(cat);
   return (
     <Link to="/menu" style={{ display: 'block', textDecoration: 'none', flexShrink: 0, padding: '4px 6px' }}>
       <motion.div
@@ -349,14 +350,22 @@ function CatItem({ cat, language }: { cat: Category; language: Language }) {
           border: '1px solid var(--c-border)',
           borderRadius: 'var(--r-md)',
           padding: '12px 10px',
-          display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6,
+          display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8,
           cursor: 'pointer', userSelect: 'none',
           width: 80,
         }}
       >
         {cat.image
           ? <img src={cat.image} alt="" style={{ width: 36, height: 36, borderRadius: '50%', objectFit: 'cover' }} />
-          : <span style={{ fontSize: '1.4rem', lineHeight: 1 }}>{cat.icon}</span>}
+          : (
+            <span style={{
+              width: 36, height: 36, borderRadius: '50%', flexShrink: 0,
+              background: 'var(--c-gold-glow)', display: 'flex', alignItems: 'center', justifyContent: 'center',
+              color: 'var(--c-gold)',
+            }}>
+              <Icon size={17} strokeWidth={1.75} />
+            </span>
+          )}
         <span style={{ fontSize: 10, fontWeight: 500, color: 'var(--c-text-2)', textAlign: 'center', lineHeight: 1.3, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '100%' }}>
           {getCatName(cat, language)}
         </span>
@@ -408,11 +417,8 @@ export function CategoriesSection() {
 export function AboutSection({ hideHeader = false }: { hideHeader?: boolean } = {}) {
   const { t } = useTranslation();
 
-  const milestones = [
-    { year: '2021', text: 'Открытие первого ресторана в Ташкенте' },
-    { year: '2022', text: 'Запуск авторского десертного меню' },
-    { year: '2023', text: 'Признание лучшим рестораном года' },
-    { year: '2024', text: 'Новый шеф-повар, расширение кухни' },
+  const differentiators = [
+    { k: 'diff1' }, { k: 'diff2' }, { k: 'diff3' }, { k: 'diff4' },
   ];
 
   return (
@@ -458,7 +464,7 @@ export function AboutSection({ hideHeader = false }: { hideHeader?: boolean } = 
           gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
           gap: 'clamp(28px,5vw,64px)',
           alignItems: 'start',
-          paddingInline: 'clamp(0px,2vw,0px)',
+          paddingInline: 'clamp(4px, 4vw, 32px)',
         }}>
           {/* Left — text + photo collage */}
           <Reveal>
@@ -495,16 +501,6 @@ export function AboutSection({ hideHeader = false }: { hideHeader?: boolean } = 
                     border: '3px solid var(--c-bg)',
                   }}
                 />
-                {/* Gold floating card */}
-                <div style={{
-                  position: 'absolute', right: 0, bottom: 0,
-                  background: 'linear-gradient(135deg, #B8884B, #D9AE74)',
-                  borderRadius: 'var(--r-md)', padding: '14px 18px',
-                  boxShadow: '0 8px 32px rgba(184,136,75,0.4)',
-                }}>
-                  <p style={{ fontFamily: 'var(--f-display)', fontSize: '1.6rem', fontWeight: 800, color: '#13200F', lineHeight: 1 }}>3+</p>
-                  <p style={{ fontSize: 10, fontWeight: 700, color: '#3A2010', marginTop: 3, textTransform: 'uppercase', letterSpacing: '0.08em' }}>лет опыта</p>
-                </div>
               </div>
 
               {/* Text below photo */}
@@ -522,38 +518,26 @@ export function AboutSection({ hideHeader = false }: { hideHeader?: boolean } = 
               {t('about.text2')}
             </p>
 
-            {/* Timeline */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
-              {milestones.map((m, i) => (
+            {/* What sets us apart */}
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
+              {differentiators.map((d, i) => (
                 <motion.div
-                  key={m.year}
+                  key={d.k}
                   initial={{ opacity: 0, x: -16 }}
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: i * 0.1, duration: 0.5 }}
-                  style={{ display: 'flex', gap: 16, paddingBottom: i < milestones.length - 1 ? 20 : 0 }}
+                  style={{
+                    padding: i === 0 ? '0 0 18px' : '18px 0',
+                    borderTop: i === 0 ? 'none' : '1px solid var(--c-border)',
+                  }}
                 >
-                  {/* Line + dot */}
-                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flexShrink: 0 }}>
-                    <div style={{
-                      width: 10, height: 10, borderRadius: '50%',
-                      background: 'var(--c-gold)',
-                      boxShadow: '0 0 12px rgba(184,136,75,0.5)',
-                      marginTop: 4, flexShrink: 0,
-                    }} />
-                    {i < milestones.length - 1 && (
-                      <div style={{ width: 1, flex: 1, background: 'var(--c-border)', marginTop: 6 }} />
-                    )}
-                  </div>
-                  {/* Content */}
-                  <div style={{ paddingBottom: 4 }}>
-                    <p style={{ fontFamily: 'var(--f-display)', fontSize: 11, fontWeight: 700, color: 'var(--c-gold)', letterSpacing: '0.12em', marginBottom: 4 }}>
-                      {m.year}
-                    </p>
-                    <p style={{ fontSize: 13, lineHeight: 1.55, color: 'var(--c-text-2)' }}>
-                      {m.text}
-                    </p>
-                  </div>
+                  <p style={{ fontFamily: 'var(--f-display)', fontSize: 14, fontWeight: 700, color: 'var(--c-text)', marginBottom: 6, lineHeight: 1.3 }}>
+                    {t(`about.${d.k}_title`)}
+                  </p>
+                  <p style={{ fontSize: 13, lineHeight: 1.6, color: 'var(--c-text-3)' }}>
+                    {t(`about.${d.k}_text`)}
+                  </p>
                 </motion.div>
               ))}
             </div>
@@ -574,51 +558,58 @@ export function AboutSection({ hideHeader = false }: { hideHeader?: boolean } = 
 ════════════════════════════════════════════════════════ */
 export function AdvantagesSection() {
   const { t } = useTranslation();
-  const items = [
-    { icon: <Trophy size={18} />, k: 'quality' },
-    { icon: <Leaf size={18} />, k: 'craft' },
-    { icon: <Sparkles size={18} />, k: 'atmosphere' },
-    { icon: <Bike size={18} />, k: 'delivery' },
-  ];
+  const items = ['quality', 'craft', 'atmosphere', 'delivery'];
   return (
     <section style={{ padding: 'clamp(40px,6vw,72px) 0', background: 'var(--c-bg)', overflow: 'hidden' }}>
-      <div className="wrap">
-        <Reveal><SH label={t('sections.advantages')} title={t('sections.advantages')} /></Reveal>
-        <div className="adv-grid">
-          {items.map((item, i) => (
-            <Reveal key={item.k} delay={i * 0.07} fill>
-              <motion.div whileHover={{ y: -3 }} transition={{ duration: 0.2 }}
-                style={{
-                  height: '100%',
-                  background: 'var(--c-bg-1)', border: '1px solid var(--c-border)',
-                  borderRadius: 'var(--r-md)', padding: '16px',
-                  display: 'flex', gap: 12, alignItems: 'flex-start',
-                  transition: 'border-color var(--t-base), box-shadow var(--t-base)',
-                }}>
-                <div style={{
-                  width: 38, height: 38, borderRadius: 'var(--r-sm)', flexShrink: 0,
-                  background: 'var(--c-gold-glow)',
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  color: 'var(--c-gold)',
-                }}>
-                  {item.icon}
-                </div>
-                <div style={{ minWidth: 0 }}>
-                  <h3 style={{ fontWeight: 600, fontSize: 13, color: 'var(--c-text)', marginBottom: 4, lineHeight: 1.3 }}>
-                    {t(`advantages.${item.k}`)}
-                  </h3>
-                  <p style={{
-                    fontSize: 11, lineHeight: 1.55, color: 'var(--c-text-3)',
-                    display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden',
-                  }}>
-                    {t(`advantages.${item.k}_desc`)}
-                  </p>
-                </div>
-              </motion.div>
+      <div className="wrap wrap-sm">
+        <Reveal><SH label={t('sections.advantages')} title={t('sections.advantages')} center={false} /></Reveal>
+        <div className="adv-list">
+          {items.map((k, i) => (
+            <Reveal key={k} delay={i * 0.06}>
+              <div className="adv-row">
+                <span className="adv-row-mark" aria-hidden />
+                <h3 className="adv-row-title">{t(`advantages.${k}`)}</h3>
+                <p className="adv-row-desc">{t(`advantages.${k}_desc`)}</p>
+              </div>
             </Reveal>
           ))}
         </div>
       </div>
+      <style>{`
+        .adv-list { display: flex; flex-direction: column; }
+        .adv-row {
+          display: grid;
+          grid-template-columns: 14px 1fr;
+          column-gap: 16px;
+          row-gap: 8px;
+          padding: 22px 0;
+          border-top: 1px solid var(--c-border);
+          transition: background var(--t-base);
+        }
+        .adv-list > div:first-child .adv-row { border-top: none; padding-top: 0; }
+        .adv-row-mark {
+          width: 14px; height: 1px; margin-top: 13px;
+          background: var(--c-gold);
+          transition: width var(--t-base);
+        }
+        .adv-row:hover .adv-row-mark { width: 22px; }
+        .adv-row-title {
+          grid-column: 2;
+          font-family: var(--f-display); font-weight: 600;
+          font-size: clamp(1.05rem, 2vw, 1.3rem);
+          color: var(--c-text); line-height: 1.3;
+        }
+        .adv-row-desc {
+          grid-column: 2;
+          font-size: 13px; line-height: 1.65; color: var(--c-text-3);
+          max-width: 560px;
+        }
+        @media (min-width: 768px) {
+          .adv-row { grid-template-columns: 14px 280px 1fr; align-items: baseline; column-gap: 28px; }
+          .adv-row-title { grid-column: 2; }
+          .adv-row-desc { grid-column: 3; }
+        }
+      `}</style>
     </section>
   );
 }
@@ -640,8 +631,11 @@ function TypingDots() {
   );
 }
 
+const CHAT_LOCALE: Record<Language, string> = { ru: 'ru', uz: 'uz', uz_cyrl: 'uz' };
+
 export function FAQSection() {
   const { t } = useTranslation();
+  const { language } = useLangStore();
   const [open, setOpen] = useState<number | null>(null);
   const chatRef = useRef<HTMLDivElement>(null);
   const chatInView = useInView(chatRef, { once: true, margin: '-80px' });
@@ -664,7 +658,7 @@ export function FAQSection() {
     { q: t('faq.q5'), a: t('faq.a5') },
   ];
 
-  const timeStr = new Date().toLocaleTimeString('ru', { hour: '2-digit', minute: '2-digit' });
+  const timeStr = new Date().toLocaleTimeString(CHAT_LOCALE[language], { hour: '2-digit', minute: '2-digit' });
 
   return (
     <section style={{ padding: 'clamp(40px,6vw,72px) 0', background: 'var(--c-bg)', overflow: 'hidden' }}>
@@ -709,53 +703,57 @@ export function FAQSection() {
         }}>
           <div style={{ position: 'absolute', inset: 0, opacity: 0.025, backgroundImage: 'radial-gradient(var(--c-gold) 1px, transparent 1px)', backgroundSize: '22px 22px', pointerEvents: 'none' }} />
 
-          {/* Client typing */}
+          {/* Client typing — bubble on the right */}
           <AnimatePresence>
             {phase >= 1 && phase < 2 && (
-              <motion.div initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0 }}
-                style={{ display: 'flex', alignItems: 'flex-end', gap: 9, maxWidth: '75%' }}>
+              <motion.div initial={{ opacity: 0, x: 10 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0 }}
+                style={{ display: 'flex', alignItems: 'flex-end', gap: 9, maxWidth: '75%', alignSelf: 'flex-end', flexDirection: 'row-reverse' }}>
                 <div style={{ width: 30, height: 30, borderRadius: '50%', background: 'var(--c-bg-2)', border: '1px solid var(--c-border)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, flexShrink: 0 }}>👤</div>
-                <div style={{ background: 'var(--c-bg-2)', borderRadius: '16px 16px 16px 4px', border: '1px solid var(--c-border)' }}><TypingDots /></div>
+                <div style={{ background: 'var(--c-bg-2)', borderRadius: '16px 16px 4px 16px', border: '1px solid var(--c-border)' }}><TypingDots /></div>
               </motion.div>
             )}
           </AnimatePresence>
 
-          {/* Client message */}
+          {/* Client message — bubble on the right */}
           <AnimatePresence>
             {phase >= 2 && (
-              <motion.div initial={{ opacity: 0, x: -10, scale: 0.95 }} animate={{ opacity: 1, x: 0, scale: 1 }}
+              <motion.div initial={{ opacity: 0, x: 10, scale: 0.95 }} animate={{ opacity: 1, x: 0, scale: 1 }}
                 transition={{ type: 'spring', stiffness: 360, damping: 28 }}
-                style={{ display: 'flex', alignItems: 'flex-end', gap: 9, maxWidth: '75%' }}>
+                style={{ display: 'flex', alignItems: 'flex-end', gap: 9, maxWidth: '75%', alignSelf: 'flex-end', flexDirection: 'row-reverse' }}>
                 <div style={{ width: 30, height: 30, borderRadius: '50%', background: 'var(--c-bg-2)', border: '1px solid var(--c-border)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, flexShrink: 0 }}>👤</div>
-                <div style={{ background: 'var(--c-bg-2)', borderRadius: '16px 16px 16px 4px', border: '1px solid var(--c-border)', padding: '10px 14px' }}>
-                  <p style={{ fontSize: 13, color: 'var(--c-text-2)', lineHeight: 1.5 }}>Нашёл ответы на все свои вопросы! Очень удобно всё расписано 👍</p>
+                <div style={{ background: 'var(--c-bg-2)', borderRadius: '16px 16px 4px 16px', border: '1px solid var(--c-border)', padding: '10px 14px' }}>
+                  <p style={{ fontSize: 13, color: 'var(--c-text-2)', lineHeight: 1.5 }}>{t('faq.chat_client_msg')}</p>
                   <p style={{ fontSize: 9, color: 'var(--c-text-3)', marginTop: 4, textAlign: 'right' }}>{timeStr}</p>
                 </div>
               </motion.div>
             )}
           </AnimatePresence>
 
-          {/* Restaurant typing */}
+          {/* Restaurant typing — bubble on the left */}
           <AnimatePresence>
             {phase >= 3 && phase < 4 && (
-              <motion.div initial={{ opacity: 0, x: 10 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0 }}
-                style={{ display: 'flex', alignItems: 'flex-end', gap: 9, maxWidth: '75%', alignSelf: 'flex-end', flexDirection: 'row-reverse' }}>
-                <div style={{ width: 30, height: 30, borderRadius: '50%', background: 'linear-gradient(135deg,#1E3528,#0C1812)', border: '1px solid rgba(184,136,75,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, fontFamily: 'var(--f-display)', fontWeight: 700, color: '#D9AE74', flexShrink: 0 }}>L</div>
-                <div style={{ background: 'var(--c-gold-glow)', borderRadius: '16px 16px 4px 16px', border: '1px solid var(--c-gold-line)' }}><TypingDots /></div>
+              <motion.div initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0 }}
+                style={{ display: 'flex', alignItems: 'flex-end', gap: 9, maxWidth: '75%' }}>
+                <div style={{ width: 30, height: 30, borderRadius: '50%', background: 'var(--c-bg-2)', border: '1px solid rgba(184,136,75,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, overflow: 'hidden' }}>
+                  <img src="/logo.png" alt="Lummy" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                </div>
+                <div style={{ background: 'var(--c-gold-glow)', borderRadius: '16px 16px 16px 4px', border: '1px solid var(--c-gold-line)' }}><TypingDots /></div>
               </motion.div>
             )}
           </AnimatePresence>
 
-          {/* Restaurant message */}
+          {/* Restaurant message — bubble on the left */}
           <AnimatePresence>
             {phase >= 4 && (
-              <motion.div initial={{ opacity: 0, x: 10, scale: 0.95 }} animate={{ opacity: 1, x: 0, scale: 1 }}
+              <motion.div initial={{ opacity: 0, x: -10, scale: 0.95 }} animate={{ opacity: 1, x: 0, scale: 1 }}
                 transition={{ type: 'spring', stiffness: 360, damping: 28 }}
-                style={{ display: 'flex', alignItems: 'flex-end', gap: 9, maxWidth: '78%', alignSelf: 'flex-end', flexDirection: 'row-reverse' }}>
-                <div style={{ width: 30, height: 30, borderRadius: '50%', background: 'linear-gradient(135deg,#1E3528,#0C1812)', border: '1px solid rgba(184,136,75,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, fontFamily: 'var(--f-display)', fontWeight: 700, color: '#D9AE74', flexShrink: 0 }}>L</div>
-                <div style={{ background: 'var(--c-gold-glow)', borderRadius: '16px 16px 4px 16px', border: '1px solid var(--c-gold-line)', padding: '10px 14px' }}>
+                style={{ display: 'flex', alignItems: 'flex-end', gap: 9, maxWidth: '78%' }}>
+                <div style={{ width: 30, height: 30, borderRadius: '50%', background: 'var(--c-bg-2)', border: '1px solid rgba(184,136,75,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, overflow: 'hidden' }}>
+                  <img src="/logo.png" alt="Lummy" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                </div>
+                <div style={{ background: 'var(--c-gold-glow)', borderRadius: '16px 16px 16px 4px', border: '1px solid var(--c-gold-line)', padding: '10px 14px' }}>
                   <p style={{ fontSize: 10, fontWeight: 700, color: 'var(--c-gold)', marginBottom: 4, letterSpacing: '0.05em' }}>Lummy Restaurant</p>
-                  <p style={{ fontSize: 13, color: 'var(--c-text-2)', lineHeight: 1.5 }}>Спасибо большое! Рады, что вы нашли нужную информацию 😊 Будем рады видеть вас!</p>
+                  <p style={{ fontSize: 13, color: 'var(--c-text-2)', lineHeight: 1.5 }}>{t('faq.chat_restaurant_msg')}</p>
                   <p style={{ fontSize: 9, color: 'var(--c-text-3)', marginTop: 4, textAlign: 'right' }}>{timeStr} ✓✓</p>
                 </div>
               </motion.div>

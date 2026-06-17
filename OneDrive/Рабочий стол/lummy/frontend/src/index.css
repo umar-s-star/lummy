@@ -580,18 +580,6 @@ select.field-input { appearance: none; cursor: pointer; }
 }
 
 /* ════════════════════════════════════════════════════════════
-   ADVANTAGES GRID — 2 col mobile, 4 col desktop
-════════════════════════════════════════════════════════════ */
-.adv-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 12px;
-}
-@media (min-width: 768px) {
-  .adv-grid { grid-template-columns: repeat(4, 1fr); gap: 16px; }
-}
-
-/* ════════════════════════════════════════════════════════════
    BOTTOM NAV SPACER (mobile only)
 ════════════════════════════════════════════════════════════ */
 @media (min-width: 768px) {

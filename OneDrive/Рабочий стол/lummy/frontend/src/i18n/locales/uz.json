@@ -33,7 +33,15 @@
     "stat_guests": "Mehmon",
     "stat_dishes": "Mualliflik taomi",
     "stat_years": "Yil tajriba",
-    "stat_awards": "Mukofot"
+    "stat_awards": "Mukofot",
+    "diff1_title": "Retseptlarda hech qanday murosa yo'q",
+    "diff1_text": "Tezlik uchun texnologiyani soddalashtirmaymiz — har bir taom shef o'ylagandek, qisqartirishlarsiz tayyorlanadi.",
+    "diff2_title": "Tayyor mahsulot emas, mahsulot",
+    "diff2_text": "Souslarni, xamirni va desertlarni oshxonada o'zimiz tayyorlaymiz — tayyor aralashmalar va muzlatish yo'q.",
+    "diff3_title": "Eslab qolinadigan xizmat",
+    "diff3_text": "Jamoamiz detallarni payqashga o'rgatilgan: taom haroratidan tortib mehmonning kayfiyatigacha.",
+    "diff4_title": "Mehmonlar qaytadi — bu haqiqat",
+    "diff4_text": "Buyurtmalarimizning katta qismi qayta keladigan va do'stlarini olib keladigan mehmonlardan."
   },
   "advantages": {
     "quality": "Premium sifat",
@@ -202,7 +210,9 @@
     "q4": "Stol bron qilish mumkinmi?",
     "a4": "Ha, +998 94 818 68 68 raqamiga qo'ng'iroq qilib stol band qilishingiz mumkin.",
     "q5": "Yetkazib berish vaqti qancha?",
-    "a5": "Odatda yetkazib berish tumanga qarab 30–60 daqiqa davom etadi."
+    "a5": "Odatda yetkazib berish tumanga qarab 30–60 daqiqa davom etadi.",
+    "chat_client_msg": "Barcha savollarimga javob topdim! Juda qulay tushuntirilgan 👍",
+    "chat_restaurant_msg": "Katta rahmat! Kerakli ma'lumotni topganingizdan xursandmiz 😊 Sizni kutamiz!"
   },
   "common": {
     "loading": "Yuklanmoqda...",

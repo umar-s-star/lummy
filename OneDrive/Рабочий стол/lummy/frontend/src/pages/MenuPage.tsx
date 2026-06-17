@@ -6,7 +6,7 @@ import { Search, X } from 'lucide-react';
 import DishCard from '../components/menu/DishCard';
 import DragCarousel from '../components/common/DragCarousel';
 import { useDataStore, useLangStore } from '../store';
-import { getCatName, getDishName } from '../utils';
+import { ALL_CATEGORIES_ICON, getCatName, getCategoryIcon, getDishName } from '../utils';
 
 export default function MenuPage() {
   const { t } = useTranslation();
@@ -171,7 +171,10 @@ export default function MenuPage() {
 
           {/* Category carousel — infinite DragCarousel */}
           {(() => {
-            const allCats = [{ id: '', icon: '🍽️', image: undefined as string | undefined, name: t('menu.all') }, ...activeCats.map(c => ({ id: c.id, icon: c.icon || '🍽️', image: c.image, name: getCatName(c, language) }))];
+            const allCats = [
+              { id: '', Icon: ALL_CATEGORIES_ICON, image: undefined as string | undefined, name: t('menu.all') },
+              ...activeCats.map(c => ({ id: c.id, Icon: getCategoryIcon(c), image: c.image, name: getCatName(c, language) })),
+            ];
             const tripled = [...allCats, ...allCats, ...allCats];
             return (
               <div style={{ position: 'relative' }}>
@@ -194,7 +197,7 @@ export default function MenuPage() {
                         >
                           {cat.image
                             ? <img src={cat.image} alt="" style={{ width: 22, height: 22, borderRadius: '50%', objectFit: 'cover', flexShrink: 0 }} />
-                            : <span style={{ fontSize: 18, lineHeight: 1 }}>{cat.icon}</span>}
+                            : <cat.Icon size={18} strokeWidth={1.75} className="cat-nav-icon" />}
                           <span className="cat-nav-label">{cat.name}</span>
                         </button>
                       </div>
@@ -232,13 +235,13 @@ export default function MenuPage() {
               <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 20 }}>
                 <div style={{
                   width: 40, height: 40, borderRadius: 'var(--r-sm)',
-                  background: 'var(--c-bg-1)', border: '1px solid var(--c-border)',
+                  background: 'var(--c-gold-glow)', border: '1px solid var(--c-border)',
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  fontSize: 20, flexShrink: 0, overflow: 'hidden',
+                  color: 'var(--c-gold)', flexShrink: 0, overflow: 'hidden',
                 }}>
                   {cat.image
                     ? <img src={cat.image} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                    : (cat.icon || '🍽️')}
+                    : (() => { const Icon = getCategoryIcon(cat); return <Icon size={19} strokeWidth={1.75} />; })()}
                 </div>
                 <div>
                   <h2 style={{ fontFamily: 'var(--f-display)', fontSize: '1.25rem', fontWeight: 600, color: 'var(--c-text)', lineHeight: 1.2 }}>
@@ -301,6 +304,13 @@ export default function MenuPage() {
           border-color: var(--c-gold);
           background: var(--c-gold-glow);
           box-shadow: 0 2px 12px rgba(184,136,75,0.18);
+        }
+        .cat-nav-icon {
+          color: var(--c-text-3);
+          transition: color var(--t-fast);
+        }
+        .cat-nav-btn[data-active] .cat-nav-icon {
+          color: var(--c-gold);
         }
         .cat-nav-label {
           font-size: 9px;
